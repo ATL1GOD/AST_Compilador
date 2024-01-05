@@ -2,7 +2,6 @@ package Utils;
 import java.util.*;
 import Principal.Interprete;
 import Statements.*;
-import Statements.StmtExpression;
 import Expressions.*;
 
 
@@ -23,4 +22,20 @@ public class AST { //Analizador Sintactico Abstracto (Abstract Syntax Tree)
             return res; //Aqui se retorna la lista de statements
         }
         return null; //si no se cumple la condicion anterior, se retorna null
+    } 
+
+    private List<Statement> declaration(List<Statement> program){//Esta parte del codigo hace lo mismo que el metodo program, pero con la diferencia de que se le pasa una lista de statements, es decir que se le pasa una lista de statements vacia, y se retorna una lista de statements con los statements que se encontraron en el codigo
+         if(preanalisis.tipo == TipoToken.FUN){  //Esta parte del codigo se encarga de ver si el token actual es de tipo FUN, si es asi, se llama al metodo funDecl, el cual retorna un statement
+            Statement stmt = funDecl();
+            program.add(stmt);
+            return declaration(program);
+         }else if(preanalisis.tipo == TipoToken.VAR){ //Esta parte del codigo se encarga de ver si el token actual es de tipo VAR, si es asi, se llama al metodo varDecl, el cual retorna un statement
+            Statement stmt = varDecl();
+            program.add(stmt);
+            return declaration(program);
+         }else if(isEXPR()||preanalisis.tipo == TipoToken.PRINT || preanalisis.tipo == TipoToken.RETURN || preanalisis.tipo == TipoToken.IF || preanalisis.tipo == TipoToken.WHILE || preanalisis.tipo == TipoToken.FOR || preanalisis.tipo == TipoToken.LEFT_BRACE){ 
+            //esta parte del codigo se encarga de ver si el token actual es de tipo EXPR, PRINT, RETURN, IF, WHILE, FOR o LEFT_BRACE, si es asi, se llama al metodo statement, el cual retorna un statement
+            Statement stmt = statement(); 
+            program.add(stmt);
+            return declaration(program);
     } 
