@@ -341,3 +341,106 @@ public class ASDR implements Parser{
             COMPARISON_2();
         }
     }
+
+    
+    private void TERM(){ //TERM -> FACTOR TERM_2
+        if(hayErrores)
+            return;
+
+        FACTOR();
+        TERM_2();
+    }
+
+    private void TERM_2(){ //TERM_2 -> - FACTOR TERM_2 | + FACTOR TERM_2 | Ɛ
+        if(hayErrores)
+            return;
+
+        if(preanalisis.tipo == TipoToken.MINUS){
+            coincidir(TipoToken.MINUS);
+            FACTOR();
+            TERM_2();
+        } else if(preanalisis.tipo == TipoToken.PLUS){
+            coincidir(TipoToken.PLUS);
+            FACTOR();
+            TERM_2();
+        }
+    }
+
+    private void FACTOR(){ //FACTOR -> UNARY FACTOR_2
+        if(hayErrores)
+            return;
+
+        UNARY();
+        FACTOR_2();
+    }
+
+    private void FACTOR_2(){ //FACTOR_2 -> / UNARY FACTOR_2 | * UNARY FACTOR_2 | Ɛ
+        if(hayErrores)
+            return;
+
+        if(preanalisis.tipo == TipoToken.SLASH){
+            coincidir(TipoToken.SLASH);
+            UNARY();
+            FACTOR_2();
+        } else if(preanalisis.tipo == TipoToken.STAR){
+            coincidir(TipoToken.STAR);
+            UNARY();
+            FACTOR_2();
+        }
+    }
+
+    private void UNARY(){ //UNARY -> ! UNARY | - UNARY | CALL
+        if(hayErrores)
+            return;
+
+        if(preanalisis.tipo == TipoToken.BANG){
+            coincidir(TipoToken.BANG);
+            UNARY();
+        } else if(preanalisis.tipo == TipoToken.MINUS){
+            coincidir(TipoToken.MINUS);
+            UNARY();
+        } else if(preanalisis.tipo == TipoToken.TRUE || preanalisis.tipo == TipoToken.FALSE || preanalisis.tipo == TipoToken.NULL || preanalisis.tipo == TipoToken.NUMBER || preanalisis.tipo == TipoToken.STRING || preanalisis.tipo == TipoToken.IDENTIFIER || preanalisis.tipo == TipoToken.LEFT_PAREN){
+            CALL();
+        } else{
+            hayErrores = true;
+            System.out.println( "Error sintactico encontrado");
+            Interprete.error(1,"Error");
+        }
+    }
+
+    private void CALL(){ //CALL -> PRIMARY CALL_2
+        if(hayErrores)
+            return;
+
+        PRIMARY();
+        CALL_2();
+    }
+
+    private void CALL_2(){ //CALL_2 -> ( ARGUMENTS_OPC ) CALL_2 | Ɛ
+        if(hayErrores)
+            return;
+
+        if(preanalisis.tipo == TipoToken.LEFT_PAREN){
+            coincidir(TipoToken.LEFT_PAREN);
+            ARGUMENTS_OPC();
+            coincidir(TipoToken.RIGHT_PAREN);
+            CALL_2();
+        }
+    }
+
+    private void PRIMARY(){ //PRIMARY -> true | false | null | number | string | id | ( EXPRESSION )
+        if(hayErrores)
+            return;
+
+        if(preanalisis.tipo == TipoToken.TRUE || preanalisis.tipo == TipoToken.FALSE || preanalisis.tipo == TipoToken.NULL || preanalisis.tipo == TipoToken.NUMBER || preanalisis.tipo == TipoToken.STRING || preanalisis.tipo == TipoToken.IDENTIFIER){
+            coincidir(preanalisis.tipo);
+        } else if(preanalisis.tipo == TipoToken.LEFT_PAREN){
+            coincidir(TipoToken.LEFT_PAREN);
+            EXPRESSION();
+            coincidir(TipoToken.RIGHT_PAREN);
+        } else{
+            hayErrores = true;
+            System.out.println( "Error sintactico encontrado");
+            Interprete.error(1,"Error");
+        }
+    }
