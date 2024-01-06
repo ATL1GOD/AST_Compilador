@@ -143,4 +143,89 @@ public class AST { //Analizador Sintactico Abstracto (Abstract Syntax Tree)
         return null;
     }
 
+     private Statement ifStmt(){ 
+        match(TipoToken.IF);
+        match(TipoToken.LEFT_PAREN);
+        Expression cond = expression();
+        match(TipoToken.RIGHT_PAREN);
+        Statement thenBr = statement();
+        Statement elseBr = elseStmt();
+        return new StmtIf(cond,thenBr,elseBr);
+    }
+
+    private Statement elseStmt(){
+        if(preanalisis.tipo == TipoToken.ELSE){
+            match(TipoToken.ELSE);
+            return statement();
+        }
+        return null;
+    }
+
+    private Statement printStmt(){
+        match(TipoToken.PRINT);
+        Expression expr = expression();
+        match(TipoToken.SEMICOLON);
+        return new StmtPrint(expr);
+    }
+
+    private Statement returnStmt(){
+        match(TipoToken.RETURN);
+        Expression retExp = retExpOpc();
+        match(TipoToken.SEMICOLON);
+        return new StmtReturn(retExp);
+    }
+
+    private Expression retExpOpc(){
+        if(isEXPR()){
+            return expression();
+        }
+        return null;
+    }
+
+    private Statement whileStmt(){
+        match(TipoToken.WHILE);
+        match(TipoToken.LEFT_PAREN);
+        Expression expr = expression();
+        match(TipoToken.RIGHT_PAREN);
+        Statement body = statement();
+        return new StmtLoop(expr,body);
+    }
+
+    private Statement block(){
+        match(TipoToken.LEFT_BRACE);
+        List<Statement> stmts = new ArrayList<>();
+        stmts = declaration(stmts);
+        match(TipoToken.RIGHT_BRACE);
+        return new StmtBlock(stmts);
+    }
+
+    private Expression expression(){
+        return assignment();
+    }
+
+    private Expression assignment(){
+        Expression expr = logicOr();
+        expr = assignmentOpc(expr);
+        return expr;
+    }
+
+    private Expression assignmentOpc(Expression expr){
+        Expression expr2;
+
+        if(preanalisis.tipo == TipoToken.EQUAL) {
+            Token t;
+            if (expr instanceof ExprVariable) {
+                t = ((ExprVariable) expr).name;
+                match(TipoToken.EQUAL);
+                expr2 = expression();
+                return new ExprAssign(t, expr2);
+            } else {
+                //envio de error
+                System.out.println("Error, solo los identificadores se pueden asignar.");
+                Interprete.error(1, "Error");
+            }
+        }
+        return expr;
+    }
+
 
