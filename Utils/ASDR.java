@@ -444,3 +444,93 @@ public class ASDR implements Parser{
             Interprete.error(1,"Error");
         }
     }
+    
+    private void FUNCTION(){ //FUNCTION -> id ( PARAMETERS_OPC ) BLOCK
+        if(hayErrores)
+            return;
+
+        coincidir(TipoToken.IDENTIFIER);
+        coincidir(TipoToken.LEFT_PAREN);
+        PARAMETERS_OPC();
+        coincidir(TipoToken.RIGHT_PAREN);
+        BLOCK();
+    }
+
+    /*private void FUNCTIONS(){ //FUNCTIONS -> FUN_DECL FUNCTIONS | Ɛ
+        if(hayErrores)
+            return;
+
+        if(preanalisis.tipo == Utils.TipoToken.FUN){
+            FUN_DECL();
+            FUNCTIONS();
+        }
+    }*/
+
+    private void PARAMETERS_OPC(){ //PARAMETERS_OPC -> PARAMETERS | Ɛ
+        if(hayErrores)
+            return;
+
+        if(preanalisis.tipo == TipoToken.IDENTIFIER){
+            PARAMETERS();
+        }
+    }
+
+    private void PARAMETERS(){ //PARAMETERS -> id PARAMETERS_2
+        if(hayErrores)
+            return;
+
+        coincidir(TipoToken.IDENTIFIER);
+        PARAMETERS_2();
+    }
+
+    private void PARAMETERS_2(){ //PARAMETERS_2 -> , id PARAMETERS_2 | Ɛ
+        if(hayErrores)
+            return;
+
+        if(preanalisis.tipo == TipoToken.COMMA){
+            coincidir(TipoToken.COMMA);
+            coincidir(TipoToken.IDENTIFIER);
+            PARAMETERS_2();
+        }
+    }
+
+    private void ARGUMENTS_OPC(){ //ARGUMENTS_OPC -> EXPRESSION ARGUMENTS | Ɛ
+        if(hayErrores)
+            return;
+
+        if(isEXPR_STMTderiv()){
+            EXPRESSION();
+            ARGUMENTS();
+        }
+    }
+
+    private void ARGUMENTS(){ //ARGUMENTS -> , EXPRESSION ARGUMENTS | Ɛ
+        if(hayErrores)
+            return;
+
+        if(preanalisis.tipo == TipoToken.COMMA){
+            coincidir(TipoToken.COMMA);
+            EXPRESSION();
+            ARGUMENTS();
+        }
+    }
+    //funcion de la primera parte de la gramatica
+    private boolean isEXPR_STMTderiv(){
+        return preanalisis.tipo == TipoToken.BANG || preanalisis.tipo == TipoToken.MINUS || preanalisis.tipo == TipoToken.TRUE || preanalisis.tipo == TipoToken.FALSE || preanalisis.tipo == TipoToken.NULL || preanalisis.tipo == TipoToken.NUMBER || preanalisis.tipo == TipoToken.STRING || preanalisis.tipo == TipoToken.IDENTIFIER || preanalisis.tipo == TipoToken.LEFT_PAREN;
+    }
+    private void coincidir(TipoToken t) {
+        if (hayErrores)
+            return;
+
+        if (preanalisis.tipo == t) {
+            i++;
+            preanalisis = tokens.get(i);
+        } else {
+            hayErrores = true;
+            System.out.println("Error sintactico encontrado, se esperaba " + t);
+            Interprete.error(1,"Error");
+
+        }
+    }
+}
+
