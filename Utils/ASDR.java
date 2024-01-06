@@ -168,3 +168,96 @@ public class ASDR implements Parser{
         }
     }
 
+    private void IF_STMT(){ //IF_STMT -> if ( EXPRESSION ) STATEMENT ELSE_STATEMENT
+        if(hayErrores)
+            return;
+
+        coincidir(TipoToken.IF);
+        coincidir(TipoToken.LEFT_PAREN);
+        EXPRESSION();
+        coincidir(TipoToken.RIGHT_PAREN);
+        STATEMENT();
+        ELSE_STATEMENT();
+    }
+
+    private void ELSE_STATEMENT(){ //ELSE_STATEMENT -> else STATEMENT | Ɛ
+        if(hayErrores)
+            return;
+
+        if(preanalisis.tipo == TipoToken.ELSE){
+            coincidir(TipoToken.ELSE);
+            STATEMENT();
+        }
+    }
+
+    private void PRINT_STMT(){ //PRINT_STMT -> print EXPRESSION;
+        if(hayErrores)
+            return;
+
+        coincidir(TipoToken.PRINT);
+        EXPRESSION();
+        coincidir(TipoToken.SEMICOLON);
+    }
+
+    private void RETURN_STMT(){ //RETURN_STMT -> return RETURN_EXP_OPC;
+        if(hayErrores)
+            return;
+
+        coincidir(TipoToken.RETURN);
+        RETURN_EXP_OPC();
+        coincidir(TipoToken.SEMICOLON);
+    }
+
+    private void RETURN_EXP_OPC(){ //RETURN_EXP_OPC -> EXPRESSION | Ɛ
+        if(hayErrores)
+            return;
+
+        if(isEXPR_STMTderiv()){
+            EXPRESSION();
+        }
+    }
+
+    private void WHILE_STMT(){ //WHILE_STMT -> while ( EXPRESSION ) STATEMENT
+        if(hayErrores)
+            return;
+
+        coincidir(TipoToken.WHILE);
+        coincidir(TipoToken.LEFT_PAREN);
+        EXPRESSION();
+        coincidir(TipoToken.RIGHT_PAREN);
+        STATEMENT();
+    }
+
+    private void BLOCK(){ //BLOCK -> { DECLARATION }
+        if(hayErrores)
+            return;
+
+        coincidir(TipoToken.LEFT_BRACE);
+        DECLARATION();
+        coincidir(TipoToken.RIGHT_BRACE);
+    }
+
+    private void EXPRESSION(){ //EXPRESSION -> ASSIGNMENT
+        if(hayErrores)
+            return;
+
+        ASSIGNMENT();
+    }
+
+    private void ASSIGNMENT(){ //ASSIGNMENT -> LOGIC_OR ASSIGNMENT_OPC
+        if(hayErrores)
+            return;
+
+        LOGIC_OR();
+        ASSIGNMENT_OPC();
+    }
+
+    private void ASSIGNMENT_OPC(){ //ASSIGNMENT_OPC -> = EXPRESSION | Ɛ
+        if(hayErrores)
+            return;
+
+        if(preanalisis.tipo == TipoToken.EQUAL) {
+            coincidir(TipoToken.EQUAL);
+            EXPRESSION();
+        }
+    }
