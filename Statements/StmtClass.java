@@ -4,7 +4,6 @@ import Expressions.ExprVariable;
 import Utils.*;
 
 import java.util.List;
-
 public class StmtClass extends Statement {
     final Token name;
     final ExprVariable superclass;
