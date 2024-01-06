@@ -1,4 +1,5 @@
-package mx.ipn.escom.k.parser;
+package Statements;
+import Expressions.Expression;
 
 public class StmtPrint extends Statement {
     final Expression expression;
