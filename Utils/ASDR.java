@@ -261,3 +261,83 @@ public class ASDR implements Parser{
             EXPRESSION();
         }
     }
+
+    private void LOGIC_OR(){ //LOGIC_OR -> LOGIC_AND LOGIC_OR_2
+        if(hayErrores)
+            return;
+
+        LOGIC_AND();
+        LOGIC_OR_2();
+    }
+
+    private void LOGIC_OR_2(){ //LOGIC_OR_2 -> or LOGIC_AND LOGIC_OR_2 | Ɛ
+        if(hayErrores)
+            return;
+
+        if(preanalisis.tipo == TipoToken.OR){
+            coincidir(TipoToken.OR);
+            LOGIC_AND();
+            LOGIC_OR_2();
+        }
+    }
+
+    private void LOGIC_AND(){ //LOGIC_AND -> EQUALITY LOGIC_AND_2
+        if(hayErrores)
+            return;
+
+        EQUALITY();
+        LOGIC_AND_2();
+    }
+
+    private void LOGIC_AND_2(){ //LOGIC_AND_2 -> and EQUALITY LOGIC_AND_2 | Ɛ
+        if(hayErrores)
+            return;
+
+        if(preanalisis.tipo == TipoToken.AND){
+            coincidir(TipoToken.AND);
+            EQUALITY();
+            LOGIC_AND_2();
+        }
+    }
+
+    private void EQUALITY(){ //EQUALITY -> COMPARISON EQUALITY_2
+        if(hayErrores)
+            return;
+
+        COMPARISON();
+        EQUALITY_2();
+    }
+
+    private void EQUALITY_2(){ //EQUALITY_2 -> != COMPARISON EQUALITY_2 | == COMPARISON EQUALITY_2 | Ɛ
+        if(hayErrores)
+            return;
+
+        if(preanalisis.tipo == TipoToken.BANG_EQUAL){
+            coincidir(TipoToken.BANG_EQUAL);
+            COMPARISON();
+            EQUALITY_2();
+        } else if(preanalisis.tipo == TipoToken.EQUAL_EQUAL){
+            coincidir(TipoToken.EQUAL_EQUAL);
+            COMPARISON();
+            EQUALITY_2();
+        }
+    }
+
+    private void COMPARISON(){ //COMPARISON -> TERM COMPARISON_2
+        if(hayErrores)
+            return;
+
+        TERM();
+        COMPARISON_2();
+    }
+
+    private void COMPARISON_2(){ //COMPARISON_2 -> > TERM COMPARISON_2 | >= TERM COMPARISON_2 | < TERM COMPARISON_2 | <= TERM COMPARISON_2 | Ɛ
+        if(hayErrores)
+            return;
+
+        if(preanalisis.tipo == TipoToken.GREATER || preanalisis.tipo == TipoToken.GREATER_EQUAL || preanalisis.tipo == TipoToken.LESS || preanalisis.tipo == TipoToken.LESS_EQUAL){
+            coincidir(preanalisis.tipo);
+            TERM();
+            COMPARISON_2();
+        }
+    }
