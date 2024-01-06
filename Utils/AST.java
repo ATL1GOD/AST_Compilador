@@ -64,4 +64,83 @@ public class AST { //Analizador Sintactico Abstracto (Abstract Syntax Tree)
         return null;
     }
 
+    
+    private Statement statement(){
+        if(isEXPR()){
+            return exprStmt();
+        } else if(preanalisis.tipo == TipoToken.FOR){
+            return forStmt();
+        } else if(preanalisis.tipo == TipoToken.IF){
+            return ifStmt();
+        } else if(preanalisis.tipo == TipoToken.PRINT){
+            return printStmt();
+        } else if(preanalisis.tipo == TipoToken.RETURN){
+            return returnStmt();
+        } else if(preanalisis.tipo == TipoToken.WHILE){
+            return whileStmt();
+        } else if(preanalisis.tipo == TipoToken.LEFT_BRACE){
+            return block();
+        }
+        return null;
+    }
+
+    private Statement exprStmt() {
+        Expression expr = expression();
+        match(TipoToken.SEMICOLON);
+        StmtExpression stmtExpr=new StmtExpression(expr);
+        return stmtExpr;
+    }
+
+    private Statement forStmt(){
+        match(TipoToken.FOR);
+        match(TipoToken.LEFT_PAREN);
+        Statement initializer = forStmt1();
+        Expression condition = forStmt2();
+        Expression increment = forStmt3();
+        match(TipoToken.RIGHT_PAREN);
+        Statement body = statement();
+        //return new StmtFor(stmt1,expr2,expr3,body);
+        if (increment != null){
+            body = new StmtBlock(Arrays.asList(body,
+                        new StmtExpression(increment)
+                )
+            );
+        }
+        if (condition == null){
+            condition = new ExprLiteral(true);
+        }
+        body = new StmtLoop(condition,body);
+        if (initializer != null){
+            body = new StmtBlock(Arrays.asList(initializer, body));
+        }
+        return body;
+    }
+
+    private Statement forStmt1(){
+        if(preanalisis.tipo == TipoToken.VAR){
+            return varDecl();
+        } else if(isEXPR()){
+            return exprStmt();
+        }
+        match(TipoToken.SEMICOLON);
+        return null;
+    }
+
+    private Expression forStmt2(){
+        if(isEXPR()){
+            Expression expr =  expression();
+            match(TipoToken.SEMICOLON);
+            return expr;
+        }
+        match(TipoToken.SEMICOLON);
+        return null;
+    }
+
+    private Expression forStmt3(){
+        if(isEXPR()){
+            return expression();
+        }
+        return null;
+    }
+
 
