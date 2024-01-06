@@ -334,5 +334,137 @@ public class AST { //Analizador Sintactico Abstracto (Abstract Syntax Tree)
         return expr;
     }
 
+    
+    private Expression term(){
+        Expression expr = factor();
+        expr = term2(expr);
+        return expr;
+    }
+
+    private Expression term2(Expression expr){
+        Token operador;
+        Expression expr2, expb;
+        if(preanalisis.tipo == TipoToken.MINUS){
+                match(TipoToken.MINUS);
+                operador = previous();
+                expr2 = factor();
+                expb = new ExprBinary(expr, operador, expr2);
+                return term2(expb);
+        }
+        else if(preanalisis.tipo == TipoToken.PLUS){
+                match(TipoToken.PLUS);
+                operador = previous();
+                expr2 = factor();
+                expb = new ExprBinary(expr, operador, expr2);
+                return term2(expb);
+        }
+        return expr;
+    }
+
+    private Expression factor(){
+        Expression expr = unary();
+        expr = factor2(expr);
+        return expr;
+    }
+
+    private Expression factor2(Expression expr){
+        Token operador;
+        Expression expr2, expb;
+
+        if(preanalisis.tipo==TipoToken.SLASH){
+                match(TipoToken.SLASH);
+                operador = previous();
+                expr2 = unary();
+                expb = new ExprBinary(expr, operador, expr2);
+                return factor2(expb); 
+        }
+        else if(preanalisis.tipo==TipoToken.STAR){
+                match(TipoToken.STAR);
+                operador = previous();
+                expr2 = unary();
+                expb = new ExprBinary(expr, operador, expr2);
+                return factor2(expb);
+        }
+        return expr;
+    }
+
+    private Expression unary(){
+        Token operador;
+        Expression expr;
+        switch (preanalisis.tipo) {
+            case BANG -> {
+                match(TipoToken.BANG);
+                operador = previous();
+                expr = unary();
+                return new ExprUnary(operador, expr);
+            }
+            case MINUS -> {
+                match(TipoToken.MINUS);
+                operador = previous();
+                expr = unary();
+                return new ExprUnary(operador, expr);
+            }
+            default -> {
+                return call();
+            }
+        }
+    }
+
+    private Expression call(){
+        Expression expr = primary();
+        expr = call2(expr);
+        return expr;
+    }
+
+    private Expression call2(Expression expr){
+        if (preanalisis.tipo == TipoToken.LEFT_PAREN) {
+            match(TipoToken.LEFT_PAREN);
+            List<Expression> lstArguments = argumentsOpc();
+            match(TipoToken.RIGHT_PAREN);
+            ExprCallFunction ecf = new ExprCallFunction(expr, lstArguments);
+            return call2(ecf);
+        }
+        return expr;
+    }
+
+    private Expression primary(){
+        if(preanalisis.tipo==TipoToken.TRUE){
+                match(TipoToken.TRUE);
+                return new ExprLiteral(true);
+        }
+        else if(preanalisis.tipo==TipoToken.FALSE){
+                match(TipoToken.FALSE);
+                return new ExprLiteral(false);            
+        }
+        else if(preanalisis.tipo==TipoToken.NULL){
+                match(TipoToken.NULL);
+                return new ExprLiteral(null);            
+        }
+        //IDENTIFIER,LEFT_PAREN,RIGHT_PAREN
+        else if(preanalisis.tipo==TipoToken.NUMBER){
+                match(TipoToken.NUMBER);
+                Token numero = previous();
+                return new ExprLiteral(numero.literal);
+        }    
+        else if(preanalisis.tipo==TipoToken.STRING){
+                match(TipoToken.STRING);
+                Token cadena = previous();
+                return new ExprLiteral(cadena.literal);             
+        }    
+        else if(preanalisis.tipo==TipoToken.IDENTIFIER){
+                match(TipoToken.IDENTIFIER);
+                Token id = previous();
+                return new ExprVariable(id);
+        }
+        else if(preanalisis.tipo==TipoToken.LEFT_PAREN || preanalisis.tipo==TipoToken.RIGHT_PAREN){
+                match(TipoToken.LEFT_PAREN);
+                Expression expr = expression();
+                match(TipoToken.RIGHT_PAREN);
+                return new ExprGrouping(expr);
+        }
+        return null;
+    }
+
+
 
 
