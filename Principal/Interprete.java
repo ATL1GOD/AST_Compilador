@@ -48,6 +48,32 @@ public class Interprete {
         }
     }
 
+    
+    private static void ejecutar(String source) {
+        try{
+            Scanner scanner = new Scanner(source);
+            List<Token> tokens = scanner.scan();
+            List<Statement> program;
+
+            /*for(Token token : tokens){
+                System.out.println(token);
+            }*/
+            //comento la impresión de tokens
+            if(!existenErrores) {
+                Parser parser = new ASDR(tokens);
+                parser.parse();
+                AST ast = new AST(tokens);
+                program = ast.program();
+                for(Statement stmt : program){
+                    System.out.println(stmt);
+                }
+            }
+        }
+        catch (Exception ex){
+            ex.printStackTrace();
+        }
+    }
+
     public static void error(int linea, String mensaje){
         reportar(linea, "", mensaje);
     }
@@ -58,3 +84,4 @@ public class Interprete {
         );*/
         existenErrores = true;
     }
+}
