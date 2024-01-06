@@ -1,6 +1,6 @@
-package mx.ipn.escom.k.parser;
+package Expressions;
 
-import mx.ipn.escom.k.tools.Token;
+import Utils.Token;
 
 public class ExprSuper extends Expression {
     // final Token keyword;
