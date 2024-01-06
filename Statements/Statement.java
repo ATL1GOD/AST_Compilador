@@ -1,4 +1,4 @@
-package mx.ipn.escom.k.parser;
+package Statements;
 
 public abstract class Statement {
 }

@@ -1,6 +1,6 @@
-package mx.ipn.escom.k.parser;
-
-import mx.ipn.escom.k.tools.Token;
+package Statements;
+import Expressions.Expression;
+import Utils.Token;
 
 public class StmtVar extends Statement {
     final Token name;

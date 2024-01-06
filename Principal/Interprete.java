@@ -47,3 +47,14 @@ public class Interprete {
             existenErrores = false;
         }
     }
+
+    public static void error(int linea, String mensaje){
+        reportar(linea, "", mensaje);
+    }
+
+    private static void reportar(int linea, String posicion, String mensaje){
+        /*System.err.println(
+                "[linea " + linea + "] Error " + posicion + ": " + mensaje
+        );*/
+        existenErrores = true;
+    }
