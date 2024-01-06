@@ -78,3 +78,93 @@ public class ASDR implements Parser{
             EXPRESSION();
         }
     }
+
+    
+    private void STATEMENT(){ //STATEMENT -> EXPR_STMT | FOR_STMT | IF_STMT | PRINT_STMT | RETURN_STMT | WHILE_STMT | BLOCK
+        if(hayErrores)
+            return;
+
+        if(isEXPR_STMTderiv()){
+            EXPR_STMT();
+        } else if(preanalisis.tipo == TipoToken.FOR){
+            FOR_STMT();
+        } else if(preanalisis.tipo == TipoToken.IF){
+            IF_STMT();
+        } else if(preanalisis.tipo == TipoToken.PRINT){
+            PRINT_STMT();
+        } else if(preanalisis.tipo == TipoToken.RETURN){
+            RETURN_STMT();
+        } else if(preanalisis.tipo == TipoToken.WHILE){
+            WHILE_STMT();
+        } else if(preanalisis.tipo == TipoToken.LEFT_BRACE){
+            BLOCK();
+        } else{
+            hayErrores = true;
+            System.out.println( "Error sintactico encontrado");
+            Interprete.error(1,"Error");
+        }
+    }
+
+    private void EXPR_STMT(){ //EXPR_STMT -> EXPRESSION;
+        if(hayErrores)
+            return;
+
+        EXPRESSION();
+        coincidir(TipoToken.SEMICOLON);
+    }
+
+    private void FOR_STMT(){ //FOR_STMT -> for ( FOR_STMT_1 FOR_STMT_2 FOR_STMT_3 ) STATEMENT
+        if(hayErrores)
+            return;
+
+        coincidir(TipoToken.FOR);
+        coincidir(TipoToken.LEFT_PAREN);
+        FOR_STMT_1();
+        FOR_STMT_2();
+        FOR_STMT_3();
+        coincidir(TipoToken.RIGHT_PAREN);
+        STATEMENT();
+    }
+
+    private void FOR_STMT_1(){ //FOR_STMT_1 -> VAR_DECL | EXPR_STMT | ;
+        if(hayErrores)
+            return;
+
+        if(preanalisis.tipo == TipoToken.VAR){
+            VAR_DECL();
+        } else if(isEXPR_STMTderiv()){
+            EXPR_STMT();
+        } else if(preanalisis.tipo == TipoToken.SEMICOLON){
+            coincidir(TipoToken.SEMICOLON);
+        } else{
+            hayErrores = true;
+            System.out.println("Error sintactico encontrado");
+            Interprete.error(1,"Error");
+        }
+    }
+
+    private void FOR_STMT_2(){ //FOR_STMT_2 -> EXPRESSION | ;
+        if(hayErrores)
+            return;
+
+        if(isEXPR_STMTderiv()){
+            EXPRESSION();
+            coincidir(TipoToken.SEMICOLON);
+        } else if(preanalisis.tipo == TipoToken.SEMICOLON){
+            coincidir(TipoToken.SEMICOLON);
+        } else{
+            hayErrores = true;
+           System.out.println( "Error sintactico encontrado");
+            Interprete.error(1,"Error");
+        }
+    }
+
+    private void FOR_STMT_3(){ //FOR_STMT_3 -> EXPRESSION | Ɛ
+        if(hayErrores)
+            return;
+        
+        if(isEXPR_STMTderiv()){
+            EXPRESSION();
+        }
+    }
+
