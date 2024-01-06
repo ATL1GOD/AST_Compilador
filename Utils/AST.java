@@ -228,4 +228,111 @@ public class AST { //Analizador Sintactico Abstracto (Abstract Syntax Tree)
         return expr;
     }
 
+    private Expression logicOr(){ //Aqui el codigo se encarga de verificar si el token actual es de tipo OR (||)
+        Expression expr = logicAnd();
+        expr = logicOr2(expr);
+        return expr;
+    }
+
+    private Expression logicOr2(Expression expr){ //este funcion se encarga de verificar si el token actual es de tipo OR (||)
+        Token operador;
+        Expression expr2, expb;
+
+        if(preanalisis.tipo == TipoToken.OR){
+            match(TipoToken.OR);
+            operador = previous();
+            expr2 = logicAnd();
+            expb = new ExprLogical(expr, operador, expr2);
+            return logicOr2(expb);
+        }
+        return expr;
+    }
+
+    private Expression logicAnd(){ //En esta funcion se verifica si el token actual es de tipo AND (&&)
+        Expression expr = equality();
+        expr = logicAnd2(expr);
+        return expr;
+    }
+
+    private Expression logicAnd2(Expression expr){ //este metodo se encarga de verificar si el token actual es de tipo AND (&&)
+        Token operador;
+        Expression expr2, expb;
+
+        if(preanalisis.tipo == TipoToken.AND){
+            match(TipoToken.AND);
+            operador = previous();
+            expr2 = equality();
+            expb = new ExprLogical(expr, operador, expr2);
+            return logicAnd2(expb);
+        }
+        return expr;
+    }
+
+    private Expression equality(){ //este metodo se encarga de verificar si el token actual es de tipo BANG_EQUAL (!=) o de tipo EQUAL_EQUAL (==)
+        Expression expr = comparison();
+        expr = equality2(expr);
+        return expr;
+    }
+
+    private Expression equality2(Expression expr){ //este metodo se encarga de verificar si el token actual es de tipo BANG_EQUAL (!=) o de tipo EQUAL_EQUAL (==)
+        Token operador;
+        Expression expr2, expb;
+        if(preanalisis.tipo==TipoToken.BANG_EQUAL){ //se verifica que el token actual sea de tipo BANG_EQUAL (!=)
+                match(TipoToken.BANG_EQUAL);
+                operador = previous();
+                expr2 = comparison();
+                expb = new ExprBinary(expr, operador, expr2);
+                return equality2(expb);
+        }
+        else if(preanalisis.tipo==TipoToken.EQUAL_EQUAL){ //se verifica que el token actual sea de tipo EQUAL_EQUAL (==)
+                match(TipoToken.EQUAL_EQUAL);
+                operador = previous();
+                expr2 = comparison();
+                expb = new ExprBinary(expr, operador, expr2);
+                return equality2(expb);
+        }
+        return expr;
+    }
+
+    private Expression comparison(){ //este metodo se encarga de verificar si el token actual es de tipo GREATER (>), GREATER_EQUAL (>=), LESS (<) o LESS_EQUAL (<=)
+        Expression expr = term();
+        expr = comparison2(expr);
+        return expr;
+    }
+
+    private Expression comparison2(Expression expr){ //En este metodo se hace lo mismo que en el metodo anterior, pero con la diferencia de que se le pasa una expresion como parametro
+        Token operador;
+        Expression expr2, expb;
+        if(preanalisis.tipo==TipoToken.GREATER){ //este if se encarga de verificar que el token actual sea de tipo GREATER (>)
+            match(TipoToken.GREATER); 
+            operador = previous(); //se guarda el token anterior en una variable de tipo Token
+            expr2 = term(); //se llama al metodo term, el cual retorna una expresion
+            expb = new ExprBinary(expr, operador, expr2); 
+            return comparison2(expb);
+        }
+        else if(preanalisis.tipo==TipoToken.GREATER_EQUAL){ //Aqui el codigo hace lo mismo que el if anterior, pero con el operador GREATER_EQUAL (>=)
+                match(TipoToken.GREATER_EQUAL);
+                operador = previous();
+                expr2 = term();
+                expb = new ExprBinary(expr, operador, expr2);
+                return comparison2(expb);
+        }
+        else if(preanalisis.tipo == TipoToken.LESS){ //este else if hace lo mismo que el anterior, pero con el operador LESS (<)
+                match(TipoToken.LESS);
+                operador = previous();
+                expr2 = term();
+                expb = new ExprBinary(expr, operador, expr2);
+                return comparison2(expb);
+        }
+        else if(preanalisis.tipo == TipoToken.LESS_EQUAL){ //se verifica que el token actual sea de tipo LESS_EQUAL (<=)
+                match(TipoToken.LESS_EQUAL);
+                operador = previous();
+                expr2 = term();
+                expb = new ExprBinary(expr, operador, expr2);
+                return comparison2(expb);
+        }
+        return expr;
+    }
+
+
 
