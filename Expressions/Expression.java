@@ -1,4 +1,4 @@
-package mx.ipn.escom.k.parser;
+package Expressions;
 
-abstract class Expression {
+public abstract class Expression {
 }
