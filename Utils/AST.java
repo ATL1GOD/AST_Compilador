@@ -38,4 +38,30 @@ public class AST { //Analizador Sintactico Abstracto (Abstract Syntax Tree)
             Statement stmt = statement(); 
             program.add(stmt);
             return declaration(program);
-    } 
+         } 
+            return program;
+    }
+
+    private Statement funDecl(){ //Este metodo se encarga de crear un statement de tipo funcion (funcion nombreFuncion(parametros){statements})
+        match(TipoToken.FUN);//se verifica que el token actual sea de tipo FUN
+        return function();
+    }
+
+    private Statement varDecl(){ //esta parte del codigo se encarga de crear un statement de tipo variable (var nombreVariable = expresion;)
+        match(TipoToken.VAR);//se verifica que el token actual sea de tipo VAR
+        match(TipoToken.IDENTIFIER);
+        Token id = previous(); //se guarda el token anterior en una variable de tipo Token
+        Expression expr = varInit(); //se llama al metodo varInit, el cual retorna una expresion
+        match(TipoToken.SEMICOLON);
+        return new StmtVar(id,expr);
+    }
+
+    private Expression varInit(){ //AQui se crea una expresion de tipo variable inicializada (variable = expresion)
+        if(preanalisis.tipo == TipoToken.EQUAL){ //se verifica que el token actual sea de tipo EQUAL
+            match(TipoToken.EQUAL);
+            return expression();
+        }
+        return null;
+    }
+
+
