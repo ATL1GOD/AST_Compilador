@@ -100,7 +100,7 @@ public class Scanner {
                     } else if (c == '"') {
                         estado = 24;
                         lexema += c;
-                    } else if (caracteres.contains(c)) {
+                    } else if (caracteres.contains(c+"")) {
                         estado = 33;
                         lexema += c;
                     }
