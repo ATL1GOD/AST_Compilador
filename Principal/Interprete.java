@@ -1,6 +1,6 @@
 package Principal;
 
-import Statements.Statement;
+import Statements.*;
 import Utils.*;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -62,6 +62,8 @@ public class Interprete {
             if(!existenErrores) {
                 Parser parser = new ASDR(tokens);
                 parser.parse();
+            }
+            if(!existenErrores){
                 AST ast = new AST(tokens);
                 program = ast.program();
                 for(Statement stmt : program){

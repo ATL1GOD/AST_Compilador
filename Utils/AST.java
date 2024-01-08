@@ -11,7 +11,7 @@ public class AST { //Analizador Sintactico Abstracto (Abstract Syntax Tree)
 
     public AST(List<Token> tokens) { //se realiza el constructor de la clase, el cual recibe una lista de tokens
         this.tokens = tokens; //se asigna la lista de tokens recibida, a la lista de tokens de la clase
-        preanalisis = tokens.get(i); //this.tokens.get(i); //se asigna el primer token de la lista a preanalisis
+        preanalisis = this.tokens.get(i); //this.tokens.get(i); //se asigna el primer token de la lista a preanalisis
     }
 
     public List<Statement> program(){ //se crea el metodo program, el cual retorna una lista de statements (declaraciones)
@@ -276,6 +276,24 @@ public class AST { //Analizador Sintactico Abstracto (Abstract Syntax Tree)
     private Expression equality2(Expression expr){ //este metodo se encarga de verificar si el token actual es de tipo BANG_EQUAL (!=) o de tipo EQUAL_EQUAL (==)
         Token operador;
         Expression expr2, expb;
+        /* 
+        switch (preanalisis.tipo){
+            case BANG_EQUAL -> {
+                match(TipoToken.BANG_EQUAL);
+                operador = previous();
+                expr2 = comparison();
+                expb = new ExprBinary(expr, operador, expr2);
+                return equality2(expb);
+            }
+            case EQUAL_EQUAL -> {
+                match(TipoToken.EQUAL_EQUAL);
+                operador = previous();
+                expr2 = comparison();
+                expb = new ExprBinary(expr, operador, expr2);
+                return equality2(expb);
+            }
+        }*/
+        ///* 
         if(preanalisis.tipo==TipoToken.BANG_EQUAL){ //se verifica que el token actual sea de tipo BANG_EQUAL (!=)
                 match(TipoToken.BANG_EQUAL);
                 operador = previous();
@@ -289,7 +307,7 @@ public class AST { //Analizador Sintactico Abstracto (Abstract Syntax Tree)
                 expr2 = comparison();
                 expb = new ExprBinary(expr, operador, expr2);
                 return equality2(expb);
-        }
+        }//*/
         return expr;
     }
 

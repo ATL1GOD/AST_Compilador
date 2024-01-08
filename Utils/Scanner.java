@@ -57,7 +57,6 @@ public class Scanner {
     public List<Token> scan() throws Exception {
         int estado = 0;
         String lexema = "";
-        // por que int linea=1?
         int linea = 1;
         char c;
 
@@ -101,9 +100,13 @@ public class Scanner {
                     } else if (c == '"') {
                         estado = 24;
                         lexema += c;
-                    } else if (caracteres.contains(c + "")) {
+                    } else if (caracteres.contains(c)) {
                         estado = 33;
                         lexema += c;
+                    }
+                    else if(c>32){
+                        System.out.println("Se encontraron caracteres ajenos al lenguaje");
+                        estado = -1;
                     }
 
                     break;
@@ -167,6 +170,7 @@ public class Scanner {
                 // caso 13 el mismo que el archivo del profesor
                 case 13:
                     if (Character.isLetter(c) || Character.isDigit(c)) {
+                        estado=13;
                         // Character.isLetterOrDigit
                         lexema += c;
                     } else {
@@ -188,6 +192,7 @@ public class Scanner {
                     break;
                 case 15:
                     if (Character.isDigit(c)) {
+                        estado=15;
                         lexema += c;
                     } else if (c == '.') {
                         estado = 16;
@@ -215,7 +220,7 @@ public class Scanner {
                     break;
                 case 17:
                     if (Character.isDigit(c)) {
-                        // estado = 17;
+                        estado = 17;
                         lexema += c;
                     } else if (c == 'E') {
                         estado = 18;
@@ -252,7 +257,7 @@ public class Scanner {
                     break;
                 case 20:
                     if (Character.isDigit(c)) {
-                        // estado = 20;
+                        estado = 20;
                         lexema += c;
                     } else {
                         Token t = new Token(TipoToken.NUMBER, lexema, Double.valueOf(lexema));
@@ -265,19 +270,19 @@ public class Scanner {
                     break;
 
                 case 24:
-                    if (c == '\n') {
+                    if (c == '\n' || i==source.length()-1) {
                         Interprete.error(linea, "Se esperaban comillas para el cierre de la cadena");
                         estado = -1;
                     } else if (c == '"') {
                         // aceptado
                         lexema += c; // agregamos las ultimas comillas al lexema
-                        Token t = new Token(TipoToken.STRING, lexema);
+                        Token t = new Token(TipoToken.STRING, lexema,String.valueOf(lexema.substring(1,lexema.length()-1)));
                         tokens.add(t); // considerado edo. 25
 
                         estado = 0;
                         lexema = "";
                     } else {
-                        // estado = 24;
+                        estado = 24;
                         lexema += c;
                     }
                     break;
@@ -301,7 +306,12 @@ public class Scanner {
                 case 27:
                     if (c == '*') {
                         estado = 28;
-                    } else {
+                    }
+                    else if(i == source.length()-1){
+                        Interprete.error(linea, "Error, probablemente no se cerro el comentario multilinea");
+                        estado= -1;
+                    } 
+                    else {
                         estado = 27;
                     }
                     break;
@@ -312,13 +322,18 @@ public class Scanner {
                         estado = 0;
                         lexema = ""; // aquí se acepta, pero no genera token, reiniciamos el lexema solo por si
                                      // acaso, edo. 29
-                    } else {
+                    }
+                    else if(i == source.length()-1){
+                        Interprete.error(linea, "Comentario multilinea no cerrado");
+                        estado=-1;
+                    } 
+                    else {
                         estado = 27;
                     }
                     break;
                 //
                 case 30:
-                    if (c == '\n') {
+                    if (c == '\n' ||  i==source.length()-1) {
                         estado = 0;
                         lexema = ""; // se acepta y no genera token. edo. 31
                     } else {
@@ -339,10 +354,16 @@ public class Scanner {
                 default: // Se usa el default como estado muerto o de error
                     error = true;
                     lexema = "";
+                    break;
             }
 
             if (error)
                 break;
+        }
+
+        if(estado ==0){
+            Token t = new Token(TipoToken.EOF, "");
+            tokens.add(t);
         }
 
         // todo esto es nuevo
