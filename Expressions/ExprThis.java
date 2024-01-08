@@ -4,7 +4,7 @@ package Expressions;
 public class ExprThis extends Expression{
     // final Token keyword;
 
-    ExprThis() {
+    public ExprThis() {
         // this.keyword = keyword;
     }
 }

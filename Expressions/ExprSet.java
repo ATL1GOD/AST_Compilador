@@ -6,7 +6,7 @@ public class ExprSet extends Expression{
     final Token name;
     final Expression value;
 
-    ExprSet(Expression object, Token name, Expression value) {
+    public ExprSet(Expression object, Token name, Expression value) {
         this.object = object;
         this.name = name;
         this.value = value;

@@ -4,7 +4,6 @@ import Principal.Interprete;
 import Statements.*;
 import Expressions.*;
 
-
 public class AST { //Analizador Sintactico Abstracto (Abstract Syntax Tree)
     private final List<Token> tokens; //se crea una lista de tokens
     private int i = 0; //se crea un contador para recorrer la lista de tokens

@@ -6,7 +6,7 @@ public class ExprBinary extends Expression{
     final Token operator;
     final Expression right;
 
-    ExprBinary(Expression left, Token operator, Expression right) {
+    public ExprBinary(Expression left, Token operator, Expression right) {
         this.left = left;
         this.operator = operator;
         this.right = right;
