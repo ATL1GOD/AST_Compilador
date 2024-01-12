@@ -10,4 +10,16 @@ public class StmtVar extends Statement {
         this.name = name;
         this.initializer = initializer;
     }
+
+    public Object ejecutar(TablaSimbolos tabla){
+        Object valor;
+        if(initializer != null){
+            valor = initializer.resolver(tabla);
+            tabla.asignar(name.getLexema(), valor);
+        } else{
+            tabla.asignar(name.getLexema(), null);
+        }
+
+        return null;
+    }
 }
