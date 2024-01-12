@@ -1,5 +1,6 @@
 package Expressions;
-import Utils.Token;
+import Utils.*;
+import Utils.TipoToken;
 
 public class ExprLogical extends Expression{
     final Expression left;
@@ -10,5 +11,20 @@ public class ExprLogical extends Expression{
         this.left = left;
         this.operator = operator;
         this.right = right;
+    }
+
+    public Object resolver(TablaSimbolos tabla){
+        Object izquierda = left.resolver(tabla);
+        Object derecha = right.resolver(tabla);
+
+        if(izquierda instanceof Boolean && derecha instanceof Boolean){
+            switch(operator.getTipo()){
+                case AND -> {
+                    return (boolean) izquierda && (boolean) derecha;
+                }
+            }
+
+        }
+
     }
 }
