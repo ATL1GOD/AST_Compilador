@@ -1,5 +1,6 @@
 package Statements;
 import Expressions.Expression;
+import Utils.*;
 
 public class StmtIf extends Statement {
     final Expression condition;
@@ -10,5 +11,9 @@ public class StmtIf extends Statement {
         this.condition = condition;
         this.thenBranch = thenBranch;
         this.elseBranch = elseBranch;
+    }
+
+    public Object ejecutar(TablaSimbolos tabla){
+
     }
 }
