@@ -1,6 +1,6 @@
 package Statements;
-import Utils.Token;
-import java.util.List;
+import Utils.*;
+import java.util.*;
 
 public class StmtFunction extends Statement {
     final Token name;
@@ -11,5 +11,9 @@ public class StmtFunction extends Statement {
         this.name = name;
         this.params = params;
         this.body = body;
+    }
+
+    public String getName(){
+        return this.name.getLexema();
     }
 }
