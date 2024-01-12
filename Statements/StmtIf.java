@@ -14,6 +14,5 @@ public class StmtIf extends Statement {
     }
 
     public Object ejecutar(TablaSimbolos tabla){
-
     }
 }
