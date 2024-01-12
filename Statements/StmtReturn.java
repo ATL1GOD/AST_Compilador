@@ -7,4 +7,8 @@ public class StmtReturn extends Statement {
     public StmtReturn(Expression value) {
         this.value = value;
     }
+    
+    public Object ejecutar(TablaSimbolos tabla){
+        return value.resolver(tabla);
+    }
 }
