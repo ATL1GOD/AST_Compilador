@@ -1,12 +1,9 @@
 package Expressions;
 
+import java.util.*;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import Statements.StmtFunction;
-import Utils.TablaSimbolos;
-import Utils.Token;
+import Statements.*;
+import Utils.*;
 
 public class ExprCallFunction extends Expression{ // Clase que representa una llamada a función
     final Expression callee;
