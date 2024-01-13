@@ -1,5 +1,5 @@
 package Expressions;
-
+/* 
 import Utils.Token;
 
 public class ExprGet extends Expression{
@@ -10,4 +10,4 @@ public class ExprGet extends Expression{
         this.object = object;
         this.name = name;
     }
-}
+}*/
