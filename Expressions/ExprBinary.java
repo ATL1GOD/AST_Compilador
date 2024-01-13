@@ -71,6 +71,28 @@ public class ExprBinary extends Expression{ // Clase que representa una expresi�
                     throw new RuntimeException("Solo se permite operar números enteros o flotantes");
                 }
             }
+            case GREATER_EQUAL -> {
+                if((izquierda instanceof Integer || izquierda instanceof Double) && (derecha instanceof Integer || derecha instanceof Double)){
+                    return Double.parseDouble(izquierda.toString()) >= Double.parseDouble(derecha.toString());
+                } else{
+                    throw new RuntimeException("Solo se permite operar números enteros o flotantes");
+                }
+            }
+            case EQUAL_EQUAL -> {
+                if((izquierda instanceof Integer || izquierda instanceof Double) && (derecha instanceof Integer || derecha instanceof Double)){
+                    return Double.parseDouble(izquierda.toString()) == Double.parseDouble(derecha.toString());
+                } else{
+                    throw new RuntimeException("Solo se permite operar números enteros o flotantes");
+                }
+            }
+            case BANG_EQUAL -> {
+                if((izquierda instanceof Integer || izquierda instanceof Double) && (derecha instanceof Integer || derecha instanceof Double)){
+                    return Double.parseDouble(izquierda.toString()) != Double.parseDouble(derecha.toString());
+                } else{
+                    throw new RuntimeException("Solo se permite operar números enteros o flotantes");
+                }
+            }
+            default -> throw new RuntimeException("Operador no fue reconocido");
         }
 
 }
