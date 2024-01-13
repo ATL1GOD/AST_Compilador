@@ -1,9 +1,10 @@
 package Statements;
-
+/*
 import Expressions.ExprVariable;
 import Utils.*;
 
 import java.util.List;
+
 public class StmtClass extends Statement {
     final Token name;
     final ExprVariable superclass;
@@ -14,4 +15,5 @@ public class StmtClass extends Statement {
         this.superclass = superclass;
         this.methods = methods;
     }
-}
+}*/
+
