@@ -1,6 +1,6 @@
 package Statements;
 import Expressions.Expression;
-import Utils.Token;
+import Utils.*;
 
 public class StmtVar extends Statement {
     final Token name;
