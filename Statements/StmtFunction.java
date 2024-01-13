@@ -16,4 +16,9 @@ public class StmtFunction extends Statement {
     public String getName(){
         return this.name.getLexema();
     }
+
+    public Object ejecutar(TablaSimbolos tabla){
+        tabla.asignar(name.getLexema(), this);
+        return null;
+    }
 }
