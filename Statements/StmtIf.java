@@ -14,5 +14,18 @@ public class StmtIf extends Statement {
     }
 
     public Object ejecutar(TablaSimbolos tabla){
+        Object condicion = condition.resolver(tabla);
+
+        if(!(condicion instanceof  Boolean)){
+            throw new RuntimeException("Condicion incorrecta");
+        }
+
+        if((boolean) condicion){
+            return thenBranch.ejecutar(tabla);
+        } else if(elseBranch != null){
+            return elseBranch.ejecutar(tabla);
+        } else{
+            return null;
+        }
     }
 }
