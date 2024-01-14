@@ -2,6 +2,16 @@ package Utils;
 import java.util.*;
 
 public class TablaSimbolos {
+    private final Map<String, Object> values;
+    private final TablaSimbolos superior;
+    public TablaSimbolos(){
+        this.superior = null;
+        this.values = new HashMap<>();
+    }
+    public TablaSimbolos(TablaSimbolos superior){
+        this.superior = superior;
+        this.values = new HashMap<>();
+    }
 
     private final Map<String, Object> values = new HashMap<>();
 
