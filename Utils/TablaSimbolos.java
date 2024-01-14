@@ -46,7 +46,8 @@ public class TablaSimbolos {
 
     }
 
-    public TablaSimbolos getSuperior(){ return this.superior; }
+    public TablaSimbolos getSuperior(){ 
+        return this.superior; }
 
 
 }
