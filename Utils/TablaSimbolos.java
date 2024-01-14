@@ -13,15 +13,22 @@ public class TablaSimbolos {
         this.values = new HashMap<>();
     }
 
-    private final Map<String, Object> values = new HashMap<>();
-
     public boolean existeIdentificador(String identificador){
-        return values.containsKey(identificador);
+        if(superior==null){
+            return values.containsKey(identificador);
+        }
+        else{
+            return values.containsKey(identificador) || superior.existeIdentificador(identificador);
+        }
+
     }
 
     public Object obtener(String identificador) {
         if (values.containsKey(identificador)) {
             return values.get(identificador);
+        }
+        else if(superior != null){
+            return superior.obtener(identificador);
         }
         throw new RuntimeException("Variable no definida '" + identificador + "'.");
     }
