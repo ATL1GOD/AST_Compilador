@@ -34,8 +34,19 @@ public class TablaSimbolos {
     }
 
     public void asignar(String identificador, Object valor){
-        values.put(identificador, valor);
+
+        if(superior != null){
+            if(superior.existeIdentificador(identificador))
+                superior.asignar(identificador,valor);
+            else
+                values.put(identificador, valor);
+        } else{
+            values.put(identificador, valor);
+        }
+
     }
+
+    public TablaSimbolos getSuperior(){ return this.superior; }
 
 
 }
