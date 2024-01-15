@@ -37,7 +37,7 @@ public class ExprCallFunction extends Expression{ // Clase que representa una ll
         }
         int n = 0;
         for (Token token : ((StmtFunction) estrFunc).params){ //En este ciclo se recorren los argumentos de la función y se guardan en la tabla de símbolos
-            tabla.asignar(token.getLexema(), argumentos.get(n)); //Aqui se guarda el argumento en la tabla de símbolos
+            inferior.asignar(token.getLexema(), argumentos.get(n)); //Aqui se guarda el argumento en la tabla de símbolos
             n++;
         }
 
