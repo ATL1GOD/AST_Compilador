@@ -17,6 +17,7 @@ public class ExprCallFunction extends Expression{ // Clase que representa una ll
     }
 
     public Object resolver(TablaSimbolos tabla){ //Este es el método que se encarga de resolver las llamadas a función
+        TablaSimbolos inferior = new TablaSimbolos(tabla);
         if(!(callee instanceof ExprVariable)){ //Aqui se verifica que el identificador sea válido
             throw new RuntimeException("No se puedo llamar a la funcion."); 
         }
@@ -40,6 +41,6 @@ public class ExprCallFunction extends Expression{ // Clase que representa una ll
             n++;
         }
 
-        return ((StmtFunction) estrFunc).body.ejecutar(tabla); //por ultimo se retorna el resultado de la función 
+        return ((StmtFunction) estrFunc).body.ejecutar(inferior); //por ultimo se retorna el resultado de la función 
     }
 }
