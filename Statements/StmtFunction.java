@@ -3,7 +3,7 @@ import Utils.*;
 import java.util.*;
 
 public class StmtFunction extends Statement {
-    final Token name;
+    public final Token name;
     public final List<Token> params;
     public final StmtBlock body;
 
