@@ -63,11 +63,16 @@ public class Interprete {
                 Parser parser = new ASDR(tokens);
                 parser.parse();
             }
+
             if(!existenErrores){
+                TablaSimbolos tabla = new TablaSimbolos();
                 AST ast = new AST(tokens);
                 program = ast.program();
-                for(Statement stmt : program){
-                    System.out.println(stmt);
+
+                if(program != null){
+                    for(Statement stmt : program){
+                        stmt.ejecutar(tabla);
+                    }
                 }
             }
         }
