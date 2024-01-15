@@ -10,7 +10,7 @@ public class ExprCallFunction extends Expression{ // Clase que representa una ll
     // final Token paren;
     final List<Expression> arguments;
 
-    public ExprCallFunction(Expression callee, /*Token paren,*/ List<Expression> arguments) { //Aqui se encuentra el constructor de la clase
+    public ExprCallFunction(Expression callee, /*Utils.Token paren,*/ List<Expression> arguments) { //Aqui se encuentra el constructor de la clase
         this.callee = callee;
         // this.paren = paren;
         this.arguments = arguments;
