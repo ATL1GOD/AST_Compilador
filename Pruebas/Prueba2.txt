@@ -1,7 +1,2 @@
 // Prueba 2:
-if(a < b){
-    print "Válido";
-}
-
-print "Fin";
-
+if(a < b){    print "Válido"; } print "Fin";

@@ -276,7 +276,7 @@ public class AST { //Analizador Sintactico Abstracto (Abstract Syntax Tree)
     private Expression equality2(Expression expr){ //este metodo se encarga de verificar si el token actual es de tipo BANG_EQUAL (!=) o de tipo EQUAL_EQUAL (==)
         Token operador;
         Expression expr2, expb;
-        /* 
+     
         switch (preanalisis.tipo){
             case BANG_EQUAL -> {
                 match(TipoToken.BANG_EQUAL);
@@ -292,8 +292,8 @@ public class AST { //Analizador Sintactico Abstracto (Abstract Syntax Tree)
                 expb = new ExprBinary(expr, operador, expr2);
                 return equality2(expb);
             }
-        }*/
-        ///* 
+        }
+        /* 
         if(preanalisis.tipo==TipoToken.BANG_EQUAL){ //se verifica que el token actual sea de tipo BANG_EQUAL (!=)
                 match(TipoToken.BANG_EQUAL);
                 operador = previous();
@@ -320,6 +320,39 @@ public class AST { //Analizador Sintactico Abstracto (Abstract Syntax Tree)
     private Expression comparison2(Expression expr){ //En este metodo se hace lo mismo que en el metodo anterior, pero con la diferencia de que se le pasa una expresion como parametro
         Token operador;
         Expression expr2, expb;
+
+        switch (preanalisis.tipo){
+            case GREATER -> {
+                match(TipoToken.GREATER);
+                operador = previous();
+                expr2 = term();
+                expb = new ExprBinary(expr, operador, expr2);
+                return comparison2(expb);
+            }
+            case GREATER_EQUAL -> {
+                match(TipoToken.GREATER_EQUAL);
+                operador = previous();
+                expr2 = term();
+                expb = new ExprBinary(expr, operador, expr2);
+                return comparison2(expb);
+            }
+            case LESS -> {
+                match(TipoToken.LESS);
+                operador = previous();
+                expr2 = term();
+                expb = new ExprBinary(expr, operador, expr2);
+                return comparison2(expb);
+            }
+            case LESS_EQUAL -> {
+                match(TipoToken.LESS_EQUAL);
+                operador = previous();
+                expr2 = term();
+                expb = new ExprBinary(expr, operador, expr2);
+                return comparison2(expb);
+            }
+        }
+        return expr;
+        /* 
         if(preanalisis.tipo==TipoToken.GREATER){ //este if se encarga de verificar que el token actual sea de tipo GREATER (>)
             match(TipoToken.GREATER); 
             operador = previous(); //se guarda el token anterior en una variable de tipo Token
@@ -348,7 +381,7 @@ public class AST { //Analizador Sintactico Abstracto (Abstract Syntax Tree)
                 expb = new ExprBinary(expr, operador, expr2);
                 return comparison2(expb);
         }
-        return expr;
+        return expr;*/
     }
 
     
@@ -361,6 +394,24 @@ public class AST { //Analizador Sintactico Abstracto (Abstract Syntax Tree)
     private Expression term2(Expression expr){
         Token operador;
         Expression expr2, expb;
+        switch (preanalisis.tipo){
+            case MINUS -> {
+                match(TipoToken.MINUS);
+                operador = previous();
+                expr2 = factor();
+                expb = new ExprBinary(expr, operador, expr2);
+                return term2(expb);
+            }
+            case PLUS -> {
+                match(TipoToken.PLUS);
+                operador = previous();
+                expr2 = factor();
+                expb = new ExprBinary(expr, operador, expr2);
+                return term2(expb);
+            }
+        }
+        return expr;
+        /* 
         if(preanalisis.tipo == TipoToken.MINUS){
                 match(TipoToken.MINUS);
                 operador = previous();
@@ -375,7 +426,7 @@ public class AST { //Analizador Sintactico Abstracto (Abstract Syntax Tree)
                 expb = new ExprBinary(expr, operador, expr2);
                 return term2(expb);
         }
-        return expr;
+        return expr;*/
     }
 
     private Expression factor(){
@@ -387,7 +438,24 @@ public class AST { //Analizador Sintactico Abstracto (Abstract Syntax Tree)
     private Expression factor2(Expression expr){
         Token operador;
         Expression expr2, expb;
-
+        switch (preanalisis.tipo) {
+            case SLASH -> {
+                match(TipoToken.SLASH);
+                operador = previous();
+                expr2 = unary();
+                expb = new ExprBinary(expr, operador, expr2);
+                return factor2(expb);
+            }
+            case STAR -> {
+                match(TipoToken.STAR);
+                operador = previous();
+                expr2 = unary();
+                expb = new ExprBinary(expr, operador, expr2);
+                return factor2(expb);
+            }
+        }
+        return expr;
+/* 
         if(preanalisis.tipo==TipoToken.SLASH){
                 match(TipoToken.SLASH);
                 operador = previous();
@@ -402,7 +470,7 @@ public class AST { //Analizador Sintactico Abstracto (Abstract Syntax Tree)
                 expb = new ExprBinary(expr, operador, expr2);
                 return factor2(expb);
         }
-        return expr;
+        return expr;*/
     }
 
     private Expression unary(){
@@ -445,6 +513,45 @@ public class AST { //Analizador Sintactico Abstracto (Abstract Syntax Tree)
     }
 
     private Expression primary(){
+        switch (preanalisis.tipo) {
+            case TRUE -> {
+                match(TipoToken.TRUE);
+                return new ExprLiteral(true);
+            }
+            case FALSE -> {
+                match(TipoToken.FALSE);
+                return new ExprLiteral(false);
+            }
+            case NULL -> {
+                match(TipoToken.NULL);
+                return new ExprLiteral(null);
+            }
+            case NUMBER -> {
+                match(TipoToken.NUMBER);
+                Token numero = previous();
+                return new ExprLiteral(numero.literal);
+            }
+            case STRING -> {
+                match(TipoToken.STRING);
+                Token cadena = previous();
+                return new ExprLiteral(cadena.literal);
+            }
+            case IDENTIFIER -> {
+                match(TipoToken.IDENTIFIER);
+                Token id = previous();
+                return new ExprVariable(id);
+            }
+            case LEFT_PAREN -> {
+                match(TipoToken.LEFT_PAREN);
+                Expression expr = expression();
+
+                // Tiene que ser cachado aquello que retorna
+                match(TipoToken.RIGHT_PAREN);
+                return new ExprGrouping(expr);
+            }
+        }
+        return null;
+        /* 
         if(preanalisis.tipo==TipoToken.TRUE){
                 match(TipoToken.TRUE);
                 return new ExprLiteral(true);
@@ -479,7 +586,7 @@ public class AST { //Analizador Sintactico Abstracto (Abstract Syntax Tree)
                 match(TipoToken.RIGHT_PAREN);
                 return new ExprGrouping(expr);
         }
-        return null;
+        return null;*/
     }
 
      private Statement function(){
